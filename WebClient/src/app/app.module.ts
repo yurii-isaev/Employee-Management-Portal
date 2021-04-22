@@ -9,6 +9,7 @@ import { AddEditEmp } from './employee/add-edit-emp/add-edit-emp';
 import { Department } from './department/department';
 import { ShowDep } from './department/show-dep/show-dep';
 import { AddEditDep } from './department/add-edit-dep/add-edit-dep';
+import { SharedService } from './shared.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { AddEditDep } from './department/add-edit-dep/add-edit-dep';
     HttpClientModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [SharedService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
