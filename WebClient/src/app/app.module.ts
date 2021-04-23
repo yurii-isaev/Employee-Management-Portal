@@ -10,6 +10,8 @@ import { Department } from './department/department';
 import { ShowDep } from './department/show-dep/show-dep';
 import { AddEditDep } from './department/add-edit-dep/add-edit-dep';
 import { SharedService } from './shared.service';
+import { RouterModule } from "@angular/router";
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { SharedService } from './shared.service';
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
+    RouterModule,
+    AppRoutingModule
   ],
   providers: [SharedService],
   bootstrap: [AppComponent]
