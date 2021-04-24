@@ -14,5 +14,5 @@ export interface Todo {
 })
 
 export class AppComponent {
-  appTitle = 'Hello Angular';
+  appTitle = 'Employee Management Portal';
 }
