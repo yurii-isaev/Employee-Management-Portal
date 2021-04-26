@@ -9,6 +9,9 @@ import { SharedService } from '../../shared.service';
 export class ShowDep implements OnInit {
 
   DepartmentList: any = [];
+  dep: any;
+  ActivateAddEditDepComp: boolean = false;
+  ModalTitle: string;
 
   constructor(private service: SharedService) {}
 
@@ -18,5 +21,19 @@ export class ShowDep implements OnInit {
 
   refreshDepList(): void {
     this.service.getDepList().subscribe(data => this.DepartmentList = data);
+  }
+
+  addClick(): void {
+    this.dep = {
+      DepartmentId: 0,
+      DepartmentName: ''
+    };
+    this.ModalTitle = 'Add Department';
+    this.ActivateAddEditDepComp = true;
+  }
+
+  closeClick(): void {
+    this.refreshDepList();
+    this.ActivateAddEditDepComp = false;
   }
 }
