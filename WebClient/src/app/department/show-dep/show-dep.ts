@@ -36,4 +36,19 @@ export class ShowDep implements OnInit {
     this.refreshDepList();
     this.ActivateAddEditDepComp = false;
   }
+
+  editClick(item: any): void {
+    this.dep = item;
+    this.ModalTitle = 'Edit Department';
+    this.ActivateAddEditDepComp = true;
+  }
+
+  deleteClick(item): void {
+    if (confirm('Are you sure?')) {
+      this.service.deleteDepartment(item.DepartmentId).subscribe(data => {
+        alert(data.toString());
+        this.refreshDepList();
+      });
+    }
+  }
 }
