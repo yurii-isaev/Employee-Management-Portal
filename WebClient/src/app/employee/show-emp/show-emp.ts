@@ -8,6 +8,9 @@ import { SharedService } from '../../shared.service';
 })
 export class ShowEmp implements OnInit {
   EmployeeList: any = [];
+  emp: any;
+  ModalTitle: string;
+  ActivateAddEditEmpComp: boolean = false;
 
   constructor(private service: SharedService) {}
 
@@ -17,5 +20,22 @@ export class ShowEmp implements OnInit {
 
   refreshEmpList(): void {
     this.service.getEmpList().subscribe(data => this.EmployeeList = data);
+  }
+
+  addClick(): void {
+    this.emp = {
+      EmployeeId: 0,
+      EmployeeName: '',
+      Department: '',
+      DateOfJoining: '',
+      PhotoFileName: 'anonymous.png'
+    }
+    this.ModalTitle = 'Add Employee';
+    this.ActivateAddEditEmpComp = true;
+  }
+
+  closeClick(): void {
+    this.refreshEmpList();
+    this.ActivateAddEditEmpComp = false;
   }
 }

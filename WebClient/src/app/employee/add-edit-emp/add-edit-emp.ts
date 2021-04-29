@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-add-edit-emp',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-edit-emp.css']
 })
 export class AddEditEmp implements OnInit {
+
+  @Input() emp: any;
 
   constructor() {}
 
