@@ -38,4 +38,20 @@ export class ShowEmp implements OnInit {
     this.refreshEmpList();
     this.ActivateAddEditEmpComp = false;
   }
+
+  editClick(item): void {
+    console.log(item);
+    this.emp = item;
+    this.ModalTitle = "Edit Employee";
+    this.ActivateAddEditEmpComp = true;
+  }
+
+  deleteClick(item): void {
+    if (confirm('Are you sure??')) {
+      this.service.deleteEmployee(item.EmployeeId).subscribe(data => {
+        alert(data.toString());
+        this.refreshEmpList();
+      })
+    }
+  }
 }
