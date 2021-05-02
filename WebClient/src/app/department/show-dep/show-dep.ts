@@ -13,6 +13,10 @@ export class ShowDep implements OnInit {
   ActivateAddEditDepComp: boolean = false;
   ModalTitle: string;
 
+  DepartmentIdFilter: string = '';
+  DepartmentNameFilter: string = '';
+  DepartmentListWithoutFilter: any = [];
+
   constructor(private service: SharedService) {}
 
   ngOnInit(): void {
@@ -20,7 +24,10 @@ export class ShowDep implements OnInit {
   }
 
   refreshDepList(): void {
-    this.service.getDepList().subscribe(data => this.DepartmentList = data);
+    this.service.getDepList().subscribe(data => {
+      this.DepartmentList = data;
+      this.DepartmentListWithoutFilter = data;
+    });
   }
 
   addClick(): void {
@@ -50,5 +57,28 @@ export class ShowDep implements OnInit {
         this.refreshDepList();
       });
     }
+  }
+
+  FilterFn() {
+    let DepartmentIdFilter = this.DepartmentIdFilter;
+    let DepartmentNameFilter = this.DepartmentNameFilter;
+
+    this.DepartmentList = this.DepartmentListWithoutFilter.filter(function (el) {
+      return el.DepartmentId.toString().toLowerCase()
+          .includes(DepartmentIdFilter.toString().trim().toLowerCase())
+        &&
+        el.DepartmentName.toString().toLowerCase()
+          .includes(DepartmentNameFilter.toString().trim().toLowerCase())
+    });
+  }
+
+  sortResult(prop: string, asc: boolean) {
+    this.DepartmentList = this.DepartmentListWithoutFilter.sort(function (a, b) {
+      if (asc) {
+        return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+      } else {
+        return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+      }
+    });
   }
 }
