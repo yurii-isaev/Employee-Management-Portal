@@ -62,7 +62,7 @@ export class AddEditEmp implements OnInit {
     const formData: FormData = new FormData();
     formData.append('uploadFile', file, file.name);
 
-    this.service.UploadPhoto(formData).subscribe((data: any) => {
+    this.service.uploadPhoto(formData).subscribe((data: any) => {
       this.PhotoFileName = data.toString();
       this.PhotoFilePath = this.service.PhotoUrl + this.PhotoFileName;
     });

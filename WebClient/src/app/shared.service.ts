@@ -49,7 +49,7 @@ export class SharedService {
     return this.http.delete(this.APIUrl + '/Employee/' + val);
   }
 
-  UploadPhoto(val: any): Observable<any> {
+  uploadPhoto(val: any): Observable<any> {
     return this.http.delete(this.PhotoUrl + '/Employee/', val);
   }
 }
