@@ -1,4 +1,4 @@
-.form-control{
+.form-control {
   margin-bottom: 2rem;
 }
 
@@ -6,11 +6,24 @@
   width: 60%;
 }
 
-.bd-highlight{
+.bd-highlight {
   width: 40%;
 }
 
 img {
   height: 250px;
-  width: 200px;
+  width: 260px;
+}
+
+.but {
+  display: block;
+  width: 128px;
+  height: 30px;
+  padding: initial;
+  margin-top: 10px;
+  margin-left: 13px;
+}
+
+.input {
+  margin-top: 30px;
 }

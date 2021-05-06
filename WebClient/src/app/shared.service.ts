@@ -38,18 +38,22 @@ export class SharedService {
   }
 
   addEmployee(val: any): Observable<any> {
-    return this.http.post(this.APIUrl + '/Employee', val);
+    return this.http.post(this.APIUrl + '/Employee/', val);
   }
 
   updateEmployee(val: any): Observable<any> {
     return this.http.put(this.APIUrl + '/Employee', val);
   }
 
-  deleteEmployee(val: any): Observable<any> {
-    return this.http.delete(this.APIUrl + '/Employee/' + val);
+  deleteEmployee(id: any): Observable<any> {
+    return this.http.delete(this.APIUrl + '/Employee/' + id);
   }
 
-  uploadPhoto(val: any): Observable<any> {
-    return this.http.delete(this.PhotoUrl + '/Employee/', val);
+  uploadPhoto(formData: any): Observable<any> {
+    return this.http.post(this.APIUrl + '/Employee/UploadPhoto/', formData);
+  }
+
+  updatePhoto(id, formData) {
+    return this.http.post(this.APIUrl + '/Employee/' + id + '/UpdatePhoto', formData);
   }
 }
