@@ -20,14 +20,13 @@
       <input type="date" class="form-control" [(ngModel)]="DateOfJoining">
     </div>
   </div>
-
   <!-- Select photo-->
   <div class="ml-3 bd-highlight">
     <div class="container">
       <img [src]="PhotoFilePath">
       <input type="file" class="input" multiple="multiple" (change)="onFileSelected($event)">
+      <button type="button" (click)="uploadPhoto()" *ngIf="emp.EmployeeId==0" class="btn btn-primary but">Upload</button>
+      <button type="button" (click)="updatePhoto(EmployeeId)" *ngIf="emp.EmployeeId!=0" class="btn btn-primary but">Update</button>
     </div>
-    <button type="button" (click)="uploadPhoto()" *ngIf="emp.EmployeeId==0" class="btn btn-primary but">Upload</button>
-    <button type="button" (click)="updatePhoto(EmployeeId)" *ngIf="emp.EmployeeId!=0" class="btn btn-primary but">Update</button>
   </div>
 </div>
