@@ -49,9 +49,14 @@ export class ShowEmp implements OnInit {
   deleteClick(item): void {
     if (confirm('Are you sure??')) {
       this.service.deleteEmployee(item.EmployeeId).subscribe(data => {
-        alert(data.toString());
-        this.refreshEmpList();
-      })
+        try {
+          alert(data.toString());
+          this.refreshEmpList();
+          console.warn('Employee deleted!')
+        } catch (e) {
+          e.console.error('Employee not deleted!')
+        }
+      });
     }
   }
 }
