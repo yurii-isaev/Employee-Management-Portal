@@ -53,7 +53,7 @@ export class SharedService {
     return this.http.post(this.APIUrl + '/Employee/UploadPhoto/', formData);
   }
 
-  updatePhoto(id, formData) {
+  updatePhoto(id, formData): Observable<any> {
     return this.http.post(this.APIUrl + '/Employee/' + id + '/UpdatePhoto', formData);
   }
 }

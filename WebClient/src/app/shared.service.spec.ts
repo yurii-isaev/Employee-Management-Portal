@@ -21,4 +21,11 @@ describe('SharedService', () => {
       service.getDepList().subscribe(departments => expect(departments).toEqual(mockDepartments));
       backend.expectOne({method: 'GET', url: 'http://localhost:5000/api/Department'}).flush(mockDepartments);
     }));
+
+  it('should returns update photo name', inject([SharedService, HttpTestingController],
+    (service: SharedService, backend: HttpTestingController) => {
+      const mockDepartments = 'test';
+      service.updatePhoto(1, "File").subscribe(departments => expect(departments).toEqual(mockDepartments));
+      backend.expectOne({method: 'POST', url: 'http://localhost:5000/api/Employee/1/UpdatePhoto'}).flush(mockDepartments);
+    }));
 });
