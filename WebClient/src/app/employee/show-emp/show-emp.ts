@@ -1,57 +1,65 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../../shared.service';
 
+export interface IEmployee {
+  EmployeeId: number;
+  EmployeeName: string;
+  Department: string;
+  DateOfJoining: string;
+  PhotoFileName: string;
+}
+
 @Component({
   selector: 'app-show-emp',
   templateUrl: './show-emp.html',
   styleUrls: ['./show-emp.css']
 })
 export class ShowEmp implements OnInit {
-  EmployeeList: any = [];
-  emp: any;
-  ModalTitle: string;
-  ActivateAddEditEmpComp: boolean = false;
+  Employee: IEmployee;
+  employeeList: Array<string>;
+  modalTitle: string;
+  activateAddEditEmpComp: boolean = false;
 
   constructor(private service: SharedService) {}
 
   ngOnInit(): void {
-    this.refreshEmpList();
+    this.updateEmpList();
   }
 
-  refreshEmpList(): void {
-    this.service.getEmpList().subscribe(data => this.EmployeeList = data);
+  updateEmpList(): void {
+    this.service.getAllEmployeesFromDB().subscribe(data => this.employeeList = data);
   }
 
-  addClick(): void {
-    this.emp = {
+  addEmployee(): void {
+    this.Employee = {
       EmployeeId: 0,
       EmployeeName: '',
       Department: '',
       DateOfJoining: '',
       PhotoFileName: 'anonymous.png'
     }
-    this.ModalTitle = 'Add Employee';
-    this.ActivateAddEditEmpComp = true;
+    this.modalTitle = 'Add Employee';
+    this.activateAddEditEmpComp = true;
   }
 
-  closeClick(): void {
-    this.refreshEmpList();
-    this.ActivateAddEditEmpComp = false;
+  closeEmployee(): void {
+    this.updateEmpList();
+    this.activateAddEditEmpComp = false;
   }
 
-  editClick(item): void {
-    console.log(item);
-    this.emp = item;
-    this.ModalTitle = "Edit Employee";
-    this.ActivateAddEditEmpComp = true;
+  editEmployee(item): void {
+    this.Employee = item;
+    this.modalTitle = "Edit Employee";
+    this.activateAddEditEmpComp = true;
+    console.warn(item);
   }
 
-  deleteClick(item): void {
+  deleteEmployee(item): void {
     if (confirm('Are you sure??')) {
-      this.service.deleteEmployee(item.EmployeeId).subscribe(data => {
+      this.service.deleteEmployeeFromDB(item.EmployeeId).subscribe(data => {
         try {
           alert(data.toString());
-          this.refreshEmpList();
+          this.updateEmpList();
           console.warn('Employee deleted!')
         } catch (e) {
           e.console.error('Employee not deleted!')
