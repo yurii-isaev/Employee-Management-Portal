@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SharedService } from '../../shared.service';
+import { IEmployee } from '../show-emp/show-emp';
 
 @Component({
   selector: 'app-add-edit-emp',
@@ -7,80 +8,78 @@ import { SharedService } from '../../shared.service';
   styleUrls: ['./add-edit-emp.css']
 })
 export class AddEditEmp implements OnInit {
+  @Input() Employee: IEmployee;
+  departmentList: Array<string>;
+  employeeId: number;
+  employeeName: string;
+  department: string;
+  dateOfJoining: string;
+  photoFileName: string;
+  photoFilePath: string;
+  fileToUpload: File;
+  formData: FormData;
 
-  @Input() emp: any;
-  EmployeeId: string;
-  EmployeeName: string;
-  Department: string;
-  DateOfJoining: string;
-  PhotoFileName: string;
-  PhotoFilePath: string;
-  DepartmentsList: any = [];
-
-  FileToUpload: File = null;
-
-  constructor(private service: SharedService) {}
+  constructor(private service: SharedService) {
+    this.fileToUpload = null;
+    this.formData = new FormData();
+  }
 
   ngOnInit(): void {
     this.loadDepartmentList()
+    this.employeeId = this.Employee.EmployeeId;
+    this.employeeName = this.Employee.EmployeeName;
+    this.department = this.Employee.Department;
+    this.dateOfJoining = this.Employee.DateOfJoining;
+    this.photoFileName = this.Employee.PhotoFileName;
+    this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
   }
 
-  private loadDepartmentList(): void {
-    this.service.getAllDepartmentNames().subscribe((data: any) => {
-      this.DepartmentsList = data;
-      this.EmployeeId = this.emp.EmployeeId;
-      this.EmployeeName = this.emp.EmployeeName;
-      this.Department = this.emp.Department;
-      this.DateOfJoining = this.emp.DateOfJoining;
-      this.PhotoFileName = this.emp.PhotoFileName;
-      this.PhotoFilePath = this.service.PhotoUrl + this.PhotoFileName;
-    });
+  private getEmployee(): IEmployee {
+    return this.Employee = {
+      EmployeeId: this.employeeId,
+      EmployeeName: this.employeeName,
+      Department: this.department,
+      DateOfJoining: this.dateOfJoining,
+      PhotoFileName: this.photoFileName
+    };
+  }
+
+  loadDepartmentList(): void {
+    this.service.getAllDepNamesFromDB().subscribe((data: any) =>
+      this.departmentList = data
+    );
   }
 
   addEmployee(): void {
-    let object = {
-      EmployeeId: this.EmployeeId,
-      EmployeeName: this.EmployeeName,
-      Department: this.Department,
-      DateOfJoining: this.DateOfJoining,
-      PhotoFileName: this.FileToUpload.name,
-      PhotoFilePath: this.PhotoFilePath
-    };
-    this.service.addEmployee(object).subscribe(res => alert(res.toString()));
+    this.service.addEmployeeToDB(this.getEmployee()).subscribe(x => {
+      console.warn(this.photoFileName, this.photoFilePath);
+    });
   }
 
   updateEmployee(): void {
-    let object = {
-      EmployeeId: this.EmployeeId,
-      EmployeeName: this.EmployeeName,
-      Department: this.Department,
-      DateOfJoining: this.DateOfJoining,
-      PhotoFileName: this.PhotoFileName,
-      PhotoFilePath: this.PhotoFilePath
-    };
-    this.service.updateEmployee(object).subscribe(res => alert(res.toString()));
-    console.log(this.PhotoFileName, this.PhotoFilePath);
+    this.service.updateEmployeeToDB(this.getEmployee()).subscribe(x => {
+      console.warn(this.photoFileName, this.photoFilePath);
+    });
   }
 
   onFileSelected(event) {
-    this.FileToUpload = event.target.files[0];
+    this.fileToUpload = event.target.files[0];
 
     // Show image preview.
     const reader = new FileReader();
-    reader.onload = (event: any) => this.PhotoFilePath = event.target.result;
-    reader.readAsDataURL(this.FileToUpload);
+    reader.onload = (event: any) => this.photoFilePath = event.target.result;
+    reader.readAsDataURL(this.fileToUpload);
 
-    console.log(this.PhotoFileName, this.PhotoFilePath, this.FileToUpload);
+    this.formData.append('File', this.fileToUpload, this.fileToUpload.name);
+
+    console.log(this.photoFileName, this.photoFilePath, this.fileToUpload);
   }
 
-  uploadPhoto() {
-    const formData: FormData = new FormData();
-    formData.append('File', this.FileToUpload, this.FileToUpload.name);
-
-    this.service.uploadPhoto(formData).subscribe((data: any) => {
+  uploadFile() {
+    this.service.uploadPhotoToStorage(this.formData).subscribe((data: any) => {
       try {
-        this.PhotoFileName = data.toString();
-        this.PhotoFilePath = this.service.PhotoUrl + this.PhotoFileName;
+        this.photoFileName = data.toString();
+        this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
         console.warn('Photo saved on the server!')
       } catch (e) {
         e.console.error('Photo were not saved on the server!')
@@ -88,14 +87,11 @@ export class AddEditEmp implements OnInit {
     });
   }
 
-  updatePhoto(id) {
-    const formData = new FormData();
-    formData.append('File', this.FileToUpload, this.FileToUpload.name);
-
-    this.service.updatePhoto(id, formData).subscribe((data: any) => {
+  updateFile(id) {
+    this.service.updatePhotoToStorage(id, this.formData).subscribe((data: any) => {
       try {
-        this.PhotoFileName = data.toString();
-        this.PhotoFilePath = this.service.PhotoUrl + this.PhotoFileName;
+        this.photoFileName = data.toString();
+        this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
         console.warn('Photo saved on the server!')
       } catch (e) {
         e.console.error('Photo were not saved on the server!')
