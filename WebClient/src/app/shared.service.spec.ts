@@ -5,6 +5,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 describe('SharedService', () => {
   let service: SharedService;
+  let formData: FormData;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -25,7 +26,7 @@ describe('SharedService', () => {
   it('should returns update photo name', inject([SharedService, HttpTestingController],
     (service: SharedService, backend: HttpTestingController) => {
       const mockDepartments = 'test';
-      service.updatePhoto(1, "File").subscribe(departments => expect(departments).toEqual(mockDepartments));
+      service.updatePhotoToStorage(1, formData).subscribe(departments => expect(departments).toEqual(mockDepartments));
       backend.expectOne({method: 'POST', url: 'http://localhost:5000/api/Employee/1/UpdatePhoto'}).flush(mockDepartments);
     }));
 });
