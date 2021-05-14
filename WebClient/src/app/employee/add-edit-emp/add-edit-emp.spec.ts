@@ -12,6 +12,7 @@ describe('AddEditEmpComponent', () => {
   let fixture: ComponentFixture<AddEditEmp>;
   let service: SharedService;
   let mockList: Array<string>;
+  let mock: string;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -26,7 +27,8 @@ describe('AddEditEmpComponent', () => {
     component = fixture.componentInstance;
     component.Employee = <IEmployee>{EmployeeId: 1};
     service = fixture.debugElement.injector.get<SharedService>(SharedService as any);
-    mockList= ['test'];
+    mockList = ['test'];
+    mock = 'test';
     fixture.detectChanges();
   });
 
@@ -42,5 +44,11 @@ describe('AddEditEmpComponent', () => {
     spyOn(service, 'getAllDepNamesFromDB').and.returnValue(of(mockList));
     component.loadDepartmentList();
     expect(component.departmentList).toEqual(mockList);
+  });
+
+  it('should call shared service when add employee', () => {
+    const spyAddEmp = spyOn(service, 'addEmployeeToDB').and.returnValue(of(mock));
+    component.addEmployee();
+    expect(spyAddEmp.calls.any()).toBeTruthy();
   });
 });
