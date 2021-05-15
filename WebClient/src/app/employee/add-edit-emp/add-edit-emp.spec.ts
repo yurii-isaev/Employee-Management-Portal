@@ -51,4 +51,10 @@ describe('AddEditEmpComponent', () => {
     component.addEmployee();
     expect(spyAddEmp.calls.any()).toBeTruthy();
   });
+
+  it('should call shared service when update employee', () => {
+    const spyUpdateEmp = spyOn(service, 'updateEmployeeToDB').and.returnValue(of(mock));
+    component.updateEmployee();
+    expect(spyUpdateEmp.calls.any()).toBeTruthy();
+  });
 });
