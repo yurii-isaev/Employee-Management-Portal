@@ -67,4 +67,16 @@ describe('AddEditEmpComponent', () => {
     expect((window as any).FileReader).toHaveBeenCalled();
     expect(mockReader.readAsDataURL).toHaveBeenCalledWith(mockFile);
   });
+
+  it('should call shared service when upload file', () => {
+    const spyUploadPhoto = spyOn(service, 'uploadPhotoToStorage').and.returnValue(of(mock));
+    component.uploadFile();
+    expect(spyUploadPhoto.calls.any()).toBeTruthy();
+  });
+
+  it('should set value photo name when upload file', () => {
+    spyOn(service, 'uploadPhotoToStorage').and.returnValue(of(mock));
+    component.uploadFile();
+    expect(component.photoFileName).toEqual(mock);
+  });
 });
