@@ -79,4 +79,16 @@ describe('AddEditEmpComponent', () => {
     component.uploadFile();
     expect(component.photoFileName).toEqual(mock);
   });
+
+  it('should call shared service when update file', () => {
+    const spyUpdatePhoto = spyOn(service, 'updatePhotoToStorage').and.returnValue(of(mock));
+    component.updateFile(1);
+    expect(spyUpdatePhoto.calls.any()).toBeTruthy();
+  });
+
+  it('should set value photo name when upload file', () => {
+    spyOn(service, 'updatePhotoToStorage').and.returnValue(of(mock));
+    component.updateFile(1);
+    expect(component.photoFileName).toEqual(mock);
+  });
 });
