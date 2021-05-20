@@ -54,17 +54,20 @@ export class ShowEmp implements OnInit {
     console.warn(item);
   }
 
-  deleteEmployee(item): void {
-    if (confirm('Are you sure??')) {
-      this.service.deleteEmployeeFromDB(item.EmployeeId).subscribe(data => {
-        try {
-          alert(data.toString());
-          this.updateEmpList();
-          console.warn('Employee deleted!')
-        } catch (e) {
-          e.console.error('Employee not deleted!')
-        }
-      });
-    }
+  showConfirm(item): void {
+    if (confirm('Are you sure??'))
+      return this.deleteEmployee(item);
   }
+
+  deleteEmployee(item: any): void {
+    this.service.deleteEmployeeFromDB(item.EmployeeId).subscribe(data => {
+      try {
+        alert(data.toString());
+        this.updateEmpList();
+        console.warn('Employee deleted!')
+      } catch (e) {
+        e.console.error('Employee not deleted!')
+      }
+    })
+  };
 }
