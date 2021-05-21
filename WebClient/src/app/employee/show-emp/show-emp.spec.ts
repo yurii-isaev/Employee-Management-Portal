@@ -40,4 +40,10 @@ describe('ShowEmpComponent', () => {
     component.updateEmpList();
     expect(component.employeeList).toEqual(mockList);
   });
+
+  it('should call confirm when show confirm', () => {
+    spyOn(window, 'confirm').and.returnValue(true);
+    component.showConfirm(1);
+    expect(component.showConfirm).toBeTruthy();
+  });
 });
