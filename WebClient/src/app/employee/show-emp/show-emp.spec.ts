@@ -10,13 +10,14 @@ describe('ShowEmpComponent', () => {
   let fixture: ComponentFixture<ShowEmp>;
   let service: SharedService;
   let mockList: Array<string>;
+  let mock: string;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ ShowEmp ],
       imports: [ HttpClientModule, FormsModule ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -24,6 +25,7 @@ describe('ShowEmpComponent', () => {
     component = fixture.componentInstance;
     service = fixture.debugElement.injector.get<SharedService>(SharedService as any);
     mockList = ['test'];
+    mock = 'test';
     fixture.detectChanges();
   });
 
@@ -45,5 +47,11 @@ describe('ShowEmpComponent', () => {
     spyOn(window, 'confirm').and.returnValue(true);
     component.showConfirm(1);
     expect(component.showConfirm).toBeTruthy();
+  });
+
+  it('should call shared service when delete employee', () => {
+    const spyDeleteEmployee = spyOn(service, 'deleteEmployeeFromDB').and.returnValue(of(mock));
+    component.deleteEmployee(1);
+    expect(spyDeleteEmployee.calls.any()).toBeTruthy();
   });
 });
