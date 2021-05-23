@@ -1,79 +1,94 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../../shared.service';
 
+export interface IDepartment {
+  DepartmentId: number;
+  DepartmentName: string;
+}
+
 @Component({
   selector: 'app-show-dep',
   templateUrl: './show-dep.html',
   styleUrls: ['./show-dep.css']
 })
 export class ShowDep implements OnInit {
+  private Department: IDepartment;
+  departmentList: Array<string>;
+  activateAddEditDepComp: boolean;
+  modalTitle: string;
 
-  DepartmentList: any = [];
-  dep: any;
-  ActivateAddEditDepComp: boolean = false;
-  ModalTitle: string;
-
-  DepartmentIdFilter: string = '';
-  DepartmentNameFilter: string = '';
-  DepartmentListWithoutFilter: any = [];
+  departmentIdFilter: string;
+  departmentNameFilter: string;
+  departmentListWithoutFilter: Array<any>;
 
   constructor(private service: SharedService) {}
 
   ngOnInit(): void {
-    this.refreshDepList();
+    this.updateDepList();
+    this.activateAddEditDepComp = false;
+    this.departmentIdFilter = '';
+    this.departmentNameFilter = '';
   }
 
-  refreshDepList(): void {
-    this.service.getDepList().subscribe(data => {
-      this.DepartmentList = data;
-      this.DepartmentListWithoutFilter = data;
+  updateDepList(): void {
+    this.service.getAllDepartmentsFromDB().subscribe(data => {
+      this.departmentList = data;
+      this.departmentListWithoutFilter = data;
     });
   }
 
-  addClick(): void {
-    this.dep = {
+  addDepartment(): void {
+    this.Department = {
       DepartmentId: 0,
       DepartmentName: ''
     };
-    this.ModalTitle = 'Add Department';
-    this.ActivateAddEditDepComp = true;
+    this.modalTitle = 'Add Department';
+    this.activateAddEditDepComp = true;
   }
 
-  closeClick(): void {
-    this.refreshDepList();
-    this.ActivateAddEditDepComp = false;
+  closeDepartment(): void {
+    this.updateDepList();
+    this.activateAddEditDepComp = false;
   }
 
-  editClick(item: any): void {
-    this.dep = item;
-    this.ModalTitle = 'Edit Department';
-    this.ActivateAddEditDepComp = true;
+  editDepartment(item: any): void {
+    this.Department = item;
+    this.modalTitle = 'Edit Department';
+    this.activateAddEditDepComp = true;
   }
 
-  deleteClick(item): void {
-    if (confirm('Are you sure?')) {
-      this.service.deleteDepartment(item.DepartmentId).subscribe(data => {
+  showConfirm(item): void {
+    if (confirm('Are you sure??'))
+      this.deleteDepartment(item);
+  }
+
+  deleteDepartment(item): void {
+    this.service.deleteDepartmentFromDB(item.DepartmentId).subscribe(data => {
+      try {
         alert(data.toString());
-        this.refreshDepList();
-      });
-    }
+        this.updateDepList();
+        console.warn('Employee deleted!')
+      } catch (e) {
+        e.console.error('Employee not deleted!')
+      }
+    });
   }
 
   FilterFn() {
-    let DepartmentIdFilter = this.DepartmentIdFilter;
-    let DepartmentNameFilter = this.DepartmentNameFilter;
+    let depIdFilter = this.departmentIdFilter;
+    let depNameFilter = this.departmentNameFilter;
 
-    this.DepartmentList = this.DepartmentListWithoutFilter.filter(function (el) {
-      return el.DepartmentId.toString().toLowerCase()
-          .includes(DepartmentIdFilter.toString().trim().toLowerCase())
+    this.departmentList = this.departmentListWithoutFilter.filter((dep: IDepartment) => {
+      return dep.DepartmentId.toString().toLowerCase()
+          .includes(depIdFilter.toString().trim().toLowerCase())
         &&
-        el.DepartmentName.toString().toLowerCase()
-          .includes(DepartmentNameFilter.toString().trim().toLowerCase())
+        dep.DepartmentName.toString().toLowerCase()
+          .includes(depNameFilter.toString().trim().toLowerCase())
     });
   }
 
   sortResult(prop: string, asc: boolean) {
-    this.DepartmentList = this.DepartmentListWithoutFilter.sort(function (a, b) {
+    this.departmentList = this.departmentListWithoutFilter.sort((a, b) => {
       if (asc) {
         return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
       } else {
