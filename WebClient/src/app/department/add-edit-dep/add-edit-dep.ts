@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SharedService } from '../../shared.service';
+import { IDepartment } from '../show-dep/show-dep';
 
 @Component({
   selector: 'app-add-edit-dep',
@@ -7,31 +8,31 @@ import { SharedService } from '../../shared.service';
   styleUrls: ['./add-edit-dep.css']
 })
 export class AddEditDep implements OnInit {
-
-  @Input() dep: any;
-  DepartmentId: string;
-  DepartmentName: string;
+  @Input() Department: IDepartment;
+  departmentId: number;
+  departmentName: string;
 
   constructor(private service: SharedService) {}
 
   ngOnInit(): void {
-    this.DepartmentId = this.dep.DepartmentId;
-    this.DepartmentName = this.dep.DepartmentName;
+    this.departmentId = this.Department.DepartmentId;
+    this.departmentName = this.Department.DepartmentName;
+  }
+
+  getDepartment(): IDepartment {
+    return this.Department = {
+      DepartmentId: this.departmentId,
+      DepartmentName: this.departmentName
+    };
   }
 
   addDepartment(): void {
-    let object = {
-      DepartmentId: this.DepartmentId,
-      DepartmentName: this.DepartmentName
-    };
-    this.service.addDepartment(object).subscribe(res => alert(res.toString()));
+    this.service.addDepartmentToDB(this.getDepartment())
+      .subscribe(res => alert(res.toString()));
   }
 
   updateDepartment(): void {
-    let object = {
-      DepartmentId: this.DepartmentId,
-      DepartmentName: this.DepartmentName
-    };
-    this.service.updateDepartment(object).subscribe(res => alert(res.toString()));
+    this.service.updateDepartmentToDB(this.getDepartment())
+      .subscribe(res => alert(res.toString()));
   }
 }
