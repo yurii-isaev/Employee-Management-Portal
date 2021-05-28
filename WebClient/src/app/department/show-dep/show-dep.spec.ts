@@ -42,4 +42,10 @@ describe('ShowDepComponent', () => {
     expect(component.departmentList).toEqual(mockList);
     expect(component.departmentListWithoutFilter).toEqual(mockList);
   });
+
+  it('should call shared service when delete department', () => {
+    const spy = spyOn(service, 'deleteDepartmentFromDB').and.returnValue(of(mockList));
+    component.deleteDepartment(1);
+    expect(spy.calls.any()).toBeTruthy();
+  });
 });
